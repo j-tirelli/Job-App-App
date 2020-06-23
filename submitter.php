@@ -7,13 +7,13 @@
 
   //  variable used to track succesful _____.
   $success = '';
+  $pageTitle = "Job submitter";
   //  include mysqli connection info. Replace with PDO later.
   require_once "../includes/connect.php";
   require_once('includes/connect.php');
   require_once('check-login.php');
   include('includes/header.php');
   include('includes/navigation.php');
-  $pageTitle = "Job submitter";
 
 
   function test_input($data) {
@@ -171,36 +171,43 @@
 
 //  SQL INSERTS --------------------------------------------------------------------------------------------------------------------------
 
-  if (!empty($job_name)) {
-    $job_sql = "INSERT INTO job (job_index,name,permalink,link) VALUES ('$job_index','$job_name','$permalink','$link')";
-    //  echo "$job_sql<br><br>";
-    mysqli_query($connection, $job_sql);
+  if ($_SESSION['id'] === 1) {
+    if (!empty($job_name)) {
+      $job_sql = "INSERT INTO job (job_index,name,permalink,link) VALUES ('$job_index','$job_name','$permalink','$link')";
+      //  echo "$job_sql<br><br>";
+      mysqli_query($connection, $job_sql);
+    }
+    else {
+      exit;
+    }
+    //  multiple insert of all categories in a single preformatted query
+    if (!empty($categories_query_Collector)) {
+      $imploded_categories_queries = implode(',', $categories_query_Collector);
+      $categories_sql = "INSERT INTO job_qualifier_categories (category_index,job_index,category) VALUES " . $imploded_categories_queries;
+      //  echo "$categories_sql<br><br>";
+      mysqli_query($connection, $categories_sql);
+    }
+    //  multiple insert of all qualities in a single preformatted query
+    if (!empty($quality_query_Collector)) {
+      $imploded_quality_queries = implode(',', $quality_query_Collector);
+      $qualifier_sql = "INSERT INTO job_qualifier (category_index,qa_index,quality) VALUES " . $imploded_quality_queries;
+      //  echo "$qualifier_sql<br><br>";
+      mysqli_query($connection, $qualifier_sql);
+    }
+    //  multiple insert of all qualities in a single preformatted query
+    if (!empty($answer_query_Collector)) {
+      $imploded_answer_queries = implode(',', $answer_query_Collector);
+      $answer_sql = "INSERT INTO job_answers (qa_index,answer,achieved) VALUES " . $imploded_answer_queries;
+      //  echo "$answer_sql<br><br>";
+      mysqli_query($connection, $answer_sql);
+    }
+    header("Location: app.php?permalink=$permalink");
   }
   else {
-    exit;
+    header("Location: app.php?permalink=SRS");
   }
-  //  multiple insert of all categories in a single preformatted query
-  if (!empty($categories_query_Collector)) {
-    $imploded_categories_queries = implode(',', $categories_query_Collector);
-    $categories_sql = "INSERT INTO job_qualifier_categories (category_index,job_index,category) VALUES " . $imploded_categories_queries;
-    //  echo "$categories_sql<br><br>";
-    mysqli_query($connection, $categories_sql);
-  }
-  //  multiple insert of all qualities in a single preformatted query
-  if (!empty($quality_query_Collector)) {
-    $imploded_quality_queries = implode(',', $quality_query_Collector);
-    $qualifier_sql = "INSERT INTO job_qualifier (category_index,qa_index,quality) VALUES " . $imploded_quality_queries;
-    //  echo "$qualifier_sql<br><br>";
-    mysqli_query($connection, $qualifier_sql);
-  }
-  //  multiple insert of all qualities in a single preformatted query
-  if (!empty($answer_query_Collector)) {
-    $imploded_answer_queries = implode(',', $answer_query_Collector);
-    $answer_sql = "INSERT INTO job_answers (qa_index,answer,achieved) VALUES " . $imploded_answer_queries;
-    //  echo "$answer_sql<br><br>";
-    mysqli_query($connection, $answer_sql);
-  }
-  header("Location: app.php?permalink=$permalink");
+
+
 
   //  END SQL INSERTS --------------------------------------------------------------------------------------------------------------------------
 
@@ -216,8 +223,13 @@ else {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <?php
 
-sleep(5);
-header("Location: insert_job.php");
+if ($_SESSION['id'] !== 1) {
+  header("Location: app.php?permalink=SRS");
+
+}
+else {
+  header("Location: insert_job.php");
+}
 
 }
 include('includes/footer.php'); ?>

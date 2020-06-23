@@ -4,6 +4,7 @@
   ini_set('display_startup_errors', 1);
   error_reporting(E_ALL);
   $success = '';
+  $pageTitle = "Job Qualification Responses";
   include_once "../includes/connect.php";
   require_once('includes/connect.php');
   require_once('check-login.php');
@@ -11,7 +12,6 @@
   include('includes/navigation.php');
   require_once('includes/connect.php');
 
-  $pageTitle = "Job Qualification Responses";
 
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
