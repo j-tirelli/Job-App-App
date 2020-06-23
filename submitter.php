@@ -8,7 +8,13 @@
   //  variable used to track succesful _____.
   $success = '';
   //  include mysqli connection info. Replace with PDO later.
-  require_once "includes/connect.php";
+  require_once "../includes/connect.php";
+  require_once('includes/connect.php');
+  require_once('check-login.php');
+  include('includes/header.php');
+  include('includes/navigation.php');
+  $pageTitle = "Job submitter";
+
 
   function test_input($data) {
    global $connection;
@@ -69,7 +75,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <?php
-    require_once $_SERVER["DOCUMENT_ROOT"] . '/class.quals.php';
+    require_once 'class.quals.php';
     //  iterate through every post value
     foreach($_POST as $key => $value){
         //  objects will be named by order recieved.
@@ -214,6 +220,4 @@ sleep(5);
 header("Location: insert_job.php");
 
 }
-?>
-  </body>
-</html>
+include('includes/footer.php'); ?>
